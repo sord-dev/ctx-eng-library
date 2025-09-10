@@ -319,3 +319,4 @@ Implement nested context layers with different persistence and retrieval charact
 **Version**: 1.0  
 **Last Updated**: 2025-09-10  
 **Compatibility**: Universal (Claude, GPT, Gemini, and other advanced language models)
+**References**: [Context Engineering References](/research/agent-prompting-links.md)
