@@ -176,7 +176,6 @@ ResearchAndPapers:
 To contribute a new link:
 1. Add the link under the appropriate section using the provided format (see above).
 2. Include a short description, relevant tags, author/source, last checked date, and a relevance score.
-3. For programmatic access, update `links.json` with the same information in JSON format.
-4. Periodically review and update metadata fields, especially the last checked date and relevance score.
+3. Periodically review and update metadata fields, especially the last checked date and relevance score.
 
 For questions or suggestions, open an issue or contact the repository maintainer.
