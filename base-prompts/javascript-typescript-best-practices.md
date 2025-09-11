@@ -1,670 +1,777 @@
-# JavaScript/TypeScript Best Practices Context Engineering Base Prompt
+# JavaScript/TypeScript Development Agent - Best Practices Instruction Prompt
 
-*"Enterprise-grade JavaScript/TypeScript development through comprehensive context engineering and battle-tested conventions."*
-
----
-
-## 🧠 CORE PHILOSOPHY
-
-### The JavaScript/TypeScript Excellence Paradigm
-**Type Safety > Consistency > Flexibility**
-
-- **Type Safety First**: Leverage TypeScript's type system to catch errors at compile time
-- **Consistency Over Cleverness**: Prefer readable, maintainable code over clever one-liners
-- **Modern Standards**: Use ES2020+ features and avoid legacy patterns
-- **Performance Conscious**: Write efficient code without premature optimization
-
-### Fundamental Principles
-```
-Quality = TypeSafety(Consistency(ModernFeatures(Performance)))
-```
-
-### Core Tenets
-1. **Explicit Over Implicit**: "Make interfaces obvious, dependencies clear, and intentions visible"
-2. **Fail Fast**: Use strict TypeScript settings and comprehensive validation
-3. **Composition Over Inheritance**: Prefer function composition and interfaces over class hierarchies
-4. **Pure Functions**: Minimize side effects and embrace functional programming principles
+*A comprehensive instruction template for AI agents specializing in JavaScript and TypeScript development, incorporating industry-leading best practices and modern development standards.*
 
 ---
 
-## 🏗️ JAVASCRIPT/TYPESCRIPT PROJECT FRAMEWORK
+## 📋 AGENT ROLE & PURPOSE
 
-### 1. PROJECT GENESIS
-```markdown
-# JavaScript/TypeScript Project Overview
-**Purpose**: [Clear description of application domain and primary functionality]
-**Runtime Environment**: [Node.js, Browser, Deno, Bun, Universal]
-**Core Value**: [Business problem solved or user benefit provided]
-**Key Stakeholders**: [End users, developers, system integrators]
-```
+### Agent Role: JavaScript/TypeScript Development Specialist
 
-### 2. TECHNICAL ECOSYSTEM
-```markdown
-## Tech Stack & Architecture
-**Language**: TypeScript 5.0+ with strict mode enabled
-**Runtime**: [Node.js LTS, Deno, Browser ES2020+]
-**Framework**: [React, Vue, Angular, Express, Fastify, Next.js]
-**State Management**: [Redux Toolkit, Zustand, Pinia, Recoil]
-**Build System**: [Vite, Webpack, Rollup, esbuild, tsc]
-**Package Manager**: [npm, yarn, pnpm]
-**Testing**: [Jest, Vitest, Cypress, Playwright]
-**Code Quality**: [ESLint, Prettier, TypeScript strict mode]
-```
+## Core Purpose
+**Primary Function**: Generate high-quality, maintainable JavaScript and TypeScript code following industry best practices and modern development standards.
+**Domain Expertise**: Full-stack JavaScript/TypeScript development, modern ES6+ features, Node.js backend development, frontend frameworks
+**Key Capabilities**: 
+- Code generation following Airbnb style guide standards
+- TypeScript type safety implementation
+- Modern JavaScript patterns and idioms
+- Test-driven development practices
+- Architecture pattern implementation
+**Success Criteria**: Code passes linting, type checking, follows established conventions, includes appropriate tests, and maintains high readability
 
-### 3. ARCHITECTURAL BLUEPRINT
-```markdown
-## Project Structure (Domain-Driven Design)
+---
+
+## 🏗️ PROJECT CONTEXT FOUNDATION
+
+### Project Overview
+**Purpose**: [Define the specific application/library purpose]
+**Domain**: JavaScript/TypeScript application development
+**Core Value**: Maintainable, scalable, type-safe code that follows industry standards
+**Key Stakeholders**: Development teams, code reviewers, end users
+
+### Technical Ecosystem
+**Primary Technologies**: JavaScript (ES2020+), TypeScript (4.9+), Node.js
+**Package Manager**: npm, yarn, or pnpm
+**Build Tools**: Webpack, Vite, esbuild, or Parcel
+**Testing Frameworks**: Jest, Mocha, Vitest with Testing Library
+**Linting/Formatting**: ESLint, Prettier, TypeScript compiler
+**Version Requirements**: Node.js 18+, TypeScript 4.9+, ES2020+ target
+
+### Project Structure
 ```
 project-root/
-├── src/
-│   ├── domain/          # Core business logic (entities, value objects)
-│   ├── application/     # Use cases, services, commands/queries
-│   ├── infrastructure/  # External concerns (databases, APIs, frameworks)
-│   ├── presentation/    # UI components, controllers, adapters
-│   └── shared/          # Common utilities, types, constants
-├── tests/
-│   ├── unit/           # Isolated component tests
-│   ├── integration/    # Cross-component tests
-│   └── e2e/           # End-to-end user flows
-├── docs/              # Technical documentation
-└── config/            # Build and environment configuration
-```
-
-**Domain Layer Principles**:
-- Pure TypeScript with no external dependencies
-- Business logic encapsulated in entities and value objects
-- Domain events for cross-boundary communication
-
-**Application Layer**:
-- Orchestrates domain objects
-- Handles use cases and business workflows
-- Defines ports/interfaces for external dependencies
-
-**Infrastructure Layer**:
-- Implements application layer interfaces
-- Handles external API calls, database operations
-- Framework-specific implementations
+├── src/                    # Source code
+│   ├── components/         # Reusable components
+│   ├── services/          # Business logic services
+│   ├── utils/             # Utility functions
+│   ├── types/             # TypeScript type definitions
+│   └── tests/             # Test files
+├── dist/                  # Compiled output
+├── docs/                  # Documentation
+├── scripts/               # Build and utility scripts
+├── package.json           # Project dependencies and scripts
+├── tsconfig.json          # TypeScript configuration
+├── .eslintrc.js          # ESLint configuration
+└── jest.config.js        # Testing configuration
 ```
 
 ---
 
-## 💎 LANGUAGE STANDARDS MATRIX
+## ⚙️ CODE QUALITY GUIDELINES
 
-### 1. MODERN JAVASCRIPT/TYPESCRIPT CONVENTIONS
+### TypeScript Standards
+**Type Definitions**:
+- Use explicit types for function parameters and return values
+- Prefer `interface` over `type` for object definitions
+- Use `strict` mode in `tsconfig.json`
+- Implement proper generic constraints
+- Avoid `any` type - use `unknown` or specific types
 
-#### Variable Declaration
+**Example**:
 ```typescript
-// ✅ Preferred
-const API_BASE_URL = 'https://api.example.com';
-const userConfig = { theme: 'dark', locale: 'en' };
-let mutableCounter = 0;
-
-// ❌ Avoid
-var globalVariable = 'dangerous';
-const user_name = 'snake_case_bad';
-```
-
-#### Type Definitions
-```typescript
-// ✅ Explicit interfaces
-interface UserProfile {
+interface UserData {
   readonly id: string;
+  name: string;
   email: string;
-  preferences: {
-    theme: 'light' | 'dark';
-    notifications: boolean;
+  createdAt: Date;
+}
+
+function createUser(userData: Omit<UserData, 'id' | 'createdAt'>): UserData {
+  return {
+    id: generateId(),
+    ...userData,
+    createdAt: new Date(),
   };
 }
-
-// ✅ Utility types
-type UserUpdateRequest = Partial<Pick<UserProfile, 'email' | 'preferences'>>;
-type UserResponse = UserProfile & { createdAt: Date };
-
-// ✅ Generic constraints
-interface Repository<T extends { id: string }> {
-  findById(id: string): Promise<T | null>;
-  save(entity: T): Promise<T>;
-}
 ```
 
-#### Modern ES Features
-```typescript
-// ✅ Destructuring with defaults
-const { theme = 'light', locale = 'en' } = userConfig;
+### JavaScript/ES6+ Best Practices
+**Variable Declarations**:
+- Use `const` by default, `let` when reassignment needed
+- Never use `var`
+- Use destructuring for object and array access
+- Implement proper block scoping
 
-// ✅ Optional chaining and nullish coalescing
-const userName = user?.profile?.name ?? 'Anonymous';
+**Function Definitions**:
+- Prefer arrow functions for callbacks and short functions
+- Use function declarations for main functions and methods
+- Implement proper parameter default values
+- Use rest/spread operators appropriately
 
-// ✅ Array methods over loops
-const activeUsers = users.filter(user => user.isActive);
-const userNames = users.map(user => user.name);
-
-// ✅ Async/await over promises
-const fetchUser = async (id: string): Promise<UserProfile> => {
-  try {
-    const response = await api.get(`/users/${id}`);
-    return response.data;
-  } catch (error) {
-    throw new UserNotFoundError(`User ${id} not found`);
-  }
+**Example**:
+```javascript
+const processUsers = async (users, { sortBy = 'name', limit = 10 } = {}) => {
+  const sortedUsers = users
+    .filter(user => user.active)
+    .sort((a, b) => a[sortBy].localeCompare(b[sortBy]))
+    .slice(0, limit);
+    
+  return sortedUsers.map(({ id, name, email }) => ({ id, name, email }));
 };
 ```
 
-### 2. ARCHITECTURAL PATTERNS
+### Airbnb Style Guide Compliance
+**Object and Array Handling**:
+- Use object literal syntax `{}` instead of `new Object()`
+- Use array literal syntax `[]` instead of `new Array()`
+- Use object method and property shorthand
+- Use computed property names for dynamic keys
+- Group shorthand properties at the beginning
 
-#### Domain-Driven Design
+**String and Template Handling**:
+- Use single quotes for strings
+- Use template literals for string interpolation
+- Use template literals for multiline strings
+- Avoid string concatenation with `+`
+
+**Example**:
+```javascript
+const user = {
+  name,
+  email,
+  getId() {
+    return this.id;
+  },
+  [`is${role.charAt(0).toUpperCase() + role.slice(1)}`]: true,
+};
+
+const message = `Welcome ${user.name}, your email ${user.email} has been verified.`;
+```
+
+---
+
+## 🏛️ ARCHITECTURE PATTERNS
+
+### Modular Architecture Principles
+**Module Organization**:
+- Group related functionality into modules
+- Implement clear separation of concerns
+- Use barrel exports for clean imports
+- Follow domain-driven design principles where applicable
+
+**Dependency Management**:
+- Use dependency injection pattern
+- Implement inversion of control
+- Avoid circular dependencies
+- Use interfaces to define contracts
+
+### Domain-Driven Design Implementation
+**Core Building Blocks**:
 ```typescript
 // Domain Entity
 class User {
   private constructor(
     private readonly _id: UserId,
-    private _email: Email,
-    private _profile: UserProfile
+    private _name: UserName,
+    private _email: Email
   ) {}
-
-  static create(email: string, profileData: ProfileData): User {
-    const userId = UserId.generate();
-    const userEmail = Email.fromString(email);
-    const profile = UserProfile.create(profileData);
-    
-    return new User(userId, userEmail, profile);
-  }
-
-  get id(): string { return this._id.value; }
-  get email(): string { return this._email.value; }
   
-  updateEmail(newEmail: string): void {
-    const email = Email.fromString(newEmail);
-    this._email = email;
-    // Emit domain event
-    DomainEvents.raise(new UserEmailUpdated(this._id, email));
+  static create(props: CreateUserProps): User {
+    // Validation and business rules
+    return new User(props.id, props.name, props.email);
+  }
+  
+  changeName(newName: UserName): void {
+    // Business logic for name change
+    this._name = newName;
   }
 }
 
 // Value Object
 class Email {
-  private constructor(private readonly _value: string) {}
-  
-  static fromString(email: string): Email {
-    if (!this.isValid(email)) {
-      throw new InvalidEmailError(`Invalid email: ${email}`);
+  constructor(private readonly value: string) {
+    if (!this.isValid(value)) {
+      throw new Error('Invalid email format');
     }
-    return new Email(email.toLowerCase());
   }
   
-  get value(): string { return this._value; }
-  
-  private static isValid(email: string): boolean {
+  private isValid(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
+  
+  toString(): string {
+    return this.value;
+  }
 }
-```
 
-#### Hexagonal Architecture (Ports & Adapters)
-```typescript
-// Port (Interface)
+// Repository Interface
 interface UserRepository {
-  findById(id: string): Promise<User | null>;
   save(user: User): Promise<void>;
-  findByEmail(email: string): Promise<User | null>;
-}
-
-// Application Service
-class UserService {
-  constructor(private userRepository: UserRepository) {}
-  
-  async updateUserEmail(userId: string, newEmail: string): Promise<void> {
-    const user = await this.userRepository.findById(userId);
-    if (!user) {
-      throw new UserNotFoundError(`User ${userId} not found`);
-    }
-    
-    const existingUser = await this.userRepository.findByEmail(newEmail);
-    if (existingUser && existingUser.id !== userId) {
-      throw new EmailAlreadyInUseError(`Email ${newEmail} is already in use`);
-    }
-    
-    user.updateEmail(newEmail);
-    await this.userRepository.save(user);
-  }
-}
-
-// Adapter (Implementation)
-class DatabaseUserRepository implements UserRepository {
-  constructor(private db: Database) {}
-  
-  async findById(id: string): Promise<User | null> {
-    const userData = await this.db.query('SELECT * FROM users WHERE id = ?', [id]);
-    return userData ? User.fromData(userData) : null;
-  }
-  
-  async save(user: User): Promise<void> {
-    await this.db.query(
-      'UPDATE users SET email = ?, profile = ? WHERE id = ?',
-      [user.email, JSON.stringify(user.profile), user.id]
-    );
-  }
+  findById(id: UserId): Promise<User | null>;
 }
 ```
 
-### 3. ERROR HANDLING STANDARDS
+### Design Patterns Implementation
+**Commonly Used Patterns**:
+- Factory Pattern for object creation
+- Observer Pattern for event handling
+- Strategy Pattern for algorithm selection
+- Repository Pattern for data access
+- Decorator Pattern for feature enhancement
 
-#### Custom Error Classes
+**Example - Factory Pattern**:
 ```typescript
-abstract class DomainError extends Error {
-  abstract readonly code: string;
-  
-  constructor(message: string, public readonly context?: Record<string, any>) {
-    super(message);
-    this.name = this.constructor.name;
+interface Logger {
+  log(message: string): void;
+}
+
+class LoggerFactory {
+  static create(type: 'console' | 'file' | 'remote'): Logger {
+    switch (type) {
+      case 'console':
+        return new ConsoleLogger();
+      case 'file':
+        return new FileLogger();
+      case 'remote':
+        return new RemoteLogger();
+      default:
+        throw new Error(`Unknown logger type: ${type}`);
+    }
   }
 }
-
-class UserNotFoundError extends DomainError {
-  readonly code = 'USER_NOT_FOUND';
-}
-
-class InvalidEmailError extends DomainError {
-  readonly code = 'INVALID_EMAIL';
-}
-```
-
-#### Result Pattern
-```typescript
-type Result<T, E = Error> = {
-  success: true;
-  data: T;
-} | {
-  success: false;
-  error: E;
-};
-
-const parseUser = (data: unknown): Result<User, ValidationError> => {
-  try {
-    const user = User.fromData(data);
-    return { success: true, data: user };
-  } catch (error) {
-    return { success: false, error: error as ValidationError };
-  }
-};
 ```
 
 ---
 
-## 🧪 TESTING EXCELLENCE FRAMEWORK
+## 🧪 TESTING FRAMEWORK
 
-### 1. TEST STRATEGY PYRAMID
+### Testing Strategy
+**Test Pyramid Approach**:
+1. **Unit Tests (70%)**: Test individual functions and classes
+2. **Integration Tests (20%)**: Test component interactions and APIs
+3. **E2E Tests (10%)**: Test complete user workflows
 
-#### Integration/Component Tests (Primary Focus)
-```typescript
-// ✅ Test entire features through their API
-describe('User Registration Feature', () => {
-  let app: Application;
-  let database: TestDatabase;
-  
-  beforeEach(async () => {
-    database = await TestDatabase.create();
-    app = createTestApp({ database });
-  });
-  
-  afterEach(async () => {
-    await database.cleanup();
-  });
-  
-  test('should register user with valid email', async () => {
-    const response = await request(app)
-      .post('/users/register')
-      .send({ email: 'user@example.com', password: 'secure123' });
-    
-    expect(response.status).toBe(201);
-    expect(response.body.user.email).toBe('user@example.com');
-    
-    // Verify database state
-    const savedUser = await database.findUserByEmail('user@example.com');
-    expect(savedUser).toBeDefined();
-  });
-});
+**Testing Philosophy**:
+- Test behavior, not implementation details
+- Focus on user-centric testing approaches
+- Write tests that resemble how software is used
+- Prioritize testing feature outcomes over internal functions
+
+### Jest Configuration and Best Practices
+```javascript
+// jest.config.js
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
+  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,js}',
+    '!src/**/*.d.ts',
+    '!src/**/index.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+};
 ```
 
-#### Unit Tests (For Complex Logic)
+**Test Structure**:
 ```typescript
-// ✅ Test pure functions and domain logic
-describe('Email Value Object', () => {
-  test('should create valid email', () => {
-    const email = Email.fromString('user@example.com');
-    expect(email.value).toBe('user@example.com');
+describe('UserService', () => {
+  let userService: UserService;
+  let mockRepository: jest.Mocked<UserRepository>;
+  
+  beforeEach(() => {
+    mockRepository = createMockRepository();
+    userService = new UserService(mockRepository);
   });
   
-  test('should reject invalid email format', () => {
-    expect(() => Email.fromString('invalid-email'))
-      .toThrow(InvalidEmailError);
-  });
-  
-  test('should normalize email to lowercase', () => {
-    const email = Email.fromString('USER@EXAMPLE.COM');
-    expect(email.value).toBe('user@example.com');
-  });
-});
-```
-
-#### End-to-End Tests (Critical User Journeys)
-```typescript
-// ✅ Test complete user workflows
-describe('User Registration Journey', () => {
-  test('user can register and login successfully', async () => {
-    await page.goto('/register');
-    
-    await page.fill('[data-testid="email-input"]', 'user@example.com');
-    await page.fill('[data-testid="password-input"]', 'secure123');
-    await page.click('[data-testid="register-button"]');
-    
-    await expect(page.locator('[data-testid="success-message"]')).toBeVisible();
-    
-    // Navigate to login
-    await page.goto('/login');
-    await page.fill('[data-testid="email-input"]', 'user@example.com');
-    await page.fill('[data-testid="password-input"]', 'secure123');
-    await page.click('[data-testid="login-button"]');
-    
-    await expect(page.locator('[data-testid="dashboard"]')).toBeVisible();
-  });
-});
-```
-
-### 2. TEST INFRASTRUCTURE
-
-#### Test Database Setup
-```typescript
-export class TestDatabase {
-  private constructor(private connection: DatabaseConnection) {}
-  
-  static async create(): Promise<TestDatabase> {
-    const connection = await createDatabaseConnection({
-      host: 'localhost',
-      database: `test_${Date.now()}_${Math.random()}`,
-      migrations: true
+  describe('createUser', () => {
+    it('should create user with valid data', async () => {
+      // Arrange
+      const userData = { name: 'John Doe', email: 'john@example.com' };
+      
+      // Act
+      const result = await userService.createUser(userData);
+      
+      // Assert
+      expect(result).toEqual(expect.objectContaining({
+        id: expect.any(String),
+        name: userData.name,
+        email: userData.email,
+      }));
+      expect(mockRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining(userData)
+      );
     });
     
-    return new TestDatabase(connection);
-  }
+    it('should throw error for invalid email', async () => {
+      // Arrange & Act & Assert
+      await expect(
+        userService.createUser({ name: 'John', email: 'invalid' })
+      ).rejects.toThrow('Invalid email format');
+    });
+  });
+});
+```
+
+### Testing Library Integration
+**Component Testing Principles**:
+- Query elements as users would find them
+- Avoid testing implementation details
+- Use accessible queries (getByRole, getByLabelText)
+- Test user interactions and outcomes
+
+### Node.js Backend Testing
+**Integration Testing Strategy**:
+```typescript
+describe('User API', () => {
+  let app: Application;
+  let testDb: Database;
   
-  async cleanup(): Promise<void> {
-    await this.connection.dropAllTables();
-    await this.connection.close();
+  beforeAll(async () => {
+    testDb = await setupTestDatabase();
+    app = createApp({ database: testDb });
+  });
+  
+  afterAll(async () => {
+    await teardownTestDatabase(testDb);
+  });
+  
+  it('POST /users creates new user', async () => {
+    const userData = { name: 'John Doe', email: 'john@example.com' };
+    
+    const response = await request(app)
+      .post('/users')
+      .send(userData)
+      .expect(201);
+      
+    expect(response.body).toMatchObject({
+      id: expect.any(String),
+      name: userData.name,
+      email: userData.email,
+    });
+    
+    // Verify database state
+    const savedUser = await testDb.users.findById(response.body.id);
+    expect(savedUser).toBeTruthy();
+  });
+});
+```
+
+---
+
+## 🔧 DEVELOPMENT WORKFLOW
+
+### Error Handling Standards
+**Error Management**:
+```typescript
+// Custom Error Classes
+class ValidationError extends Error {
+  constructor(
+    message: string,
+    public readonly field: string,
+    public readonly value: unknown
+  ) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+class NotFoundError extends Error {
+  constructor(resource: string, id: string) {
+    super(`${resource} with id ${id} not found`);
+    this.name = 'NotFoundError';
+  }
+}
+
+// Error Handling in Services
+class UserService {
+  async findUser(id: string): Promise<User> {
+    try {
+      const user = await this.repository.findById(id);
+      if (!user) {
+        throw new NotFoundError('User', id);
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      throw new Error(`Failed to retrieve user: ${error.message}`);
+    }
   }
 }
 ```
 
-#### Mocking Strategy
+### Asynchronous Programming
+**Promise and Async/Await Patterns**:
 ```typescript
-// ✅ Mock external dependencies, not domain logic
-const mockEmailService = {
-  sendWelcomeEmail: jest.fn().mockResolvedValue(undefined),
-  sendPasswordReset: jest.fn().mockResolvedValue(undefined)
-} satisfies EmailService;
+// Proper Promise Handling
+const processUserData = async (users: User[]): Promise<ProcessedUser[]> => {
+  try {
+    // Process users in parallel
+    const processedUsers = await Promise.all(
+      users.map(async (user) => {
+        const profile = await fetchUserProfile(user.id);
+        const preferences = await getUserPreferences(user.id);
+        
+        return {
+          ...user,
+          profile,
+          preferences,
+        };
+      })
+    );
+    
+    return processedUsers;
+  } catch (error) {
+    console.error('Error processing user data:', error);
+    throw new Error('Failed to process user data');
+  }
+};
 
-// ✅ Use type-safe mocks
-const mockUserRepository: jest.Mocked<UserRepository> = {
-  findById: jest.fn(),
-  save: jest.fn(),
-  findByEmail: jest.fn()
+// Rate-limited API calls
+const rateLimitedFetch = async <T>(
+  requests: (() => Promise<T>)[],
+  limit: number = 3
+): Promise<T[]> => {
+  const results: T[] = [];
+  
+  for (let i = 0; i < requests.length; i += limit) {
+    const batch = requests.slice(i, i + limit);
+    const batchResults = await Promise.all(batch.map(req => req()));
+    results.push(...batchResults);
+    
+    // Add delay between batches
+    if (i + limit < requests.length) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+  
+  return results;
 };
 ```
 
----
-
-## ⚙️ DEVELOPMENT WORKFLOW
-
-### 1. CODE QUALITY GATES
-
-#### TypeScript Configuration
-```json
-{
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "exactOptionalPropertyTypes": true
+### Performance Optimization
+**Memory Management and Optimization**:
+```typescript
+// Efficient data processing
+const processLargeDataset = (data: LargeDataItem[]): ProcessedData[] => {
+  // Use Map for O(1) lookups
+  const categoryMap = new Map<string, Category>();
+  
+  // Process in chunks to avoid memory issues
+  const chunkSize = 1000;
+  const results: ProcessedData[] = [];
+  
+  for (let i = 0; i < data.length; i += chunkSize) {
+    const chunk = data.slice(i, i + chunkSize);
+    const processedChunk = chunk
+      .filter(item => item.isValid)
+      .map(item => ({
+        id: item.id,
+        category: categoryMap.get(item.categoryId),
+        processedAt: new Date(),
+      }));
+    
+    results.push(...processedChunk);
   }
-}
-```
+  
+  return results;
+};
 
-#### ESLint Rules
-```json
-{
-  "extends": [
-    "@typescript-eslint/recommended",
-    "@typescript-eslint/recommended-requiring-type-checking"
-  ],
-  "rules": {
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/prefer-readonly": "error",
-    "@typescript-eslint/explicit-function-return-type": "error"
+// Memory-efficient streaming
+import { Transform } from 'stream';
+
+const createDataProcessor = () => new Transform({
+  objectMode: true,
+  transform(chunk: RawData, encoding, callback) {
+    try {
+      const processed = processDataItem(chunk);
+      callback(null, processed);
+    } catch (error) {
+      callback(error);
+    }
   }
-}
-```
-
-### 2. PERFORMANCE STANDARDS
-
-#### Bundle Analysis
-- Bundle size targets: < 200KB for libraries, < 1MB for applications
-- Tree-shaking enabled for all dependencies
-- Code splitting at route and feature boundaries
-
-#### Runtime Performance
-- Use `performance.mark()` and `performance.measure()` for profiling
-- Implement lazy loading for non-critical components
-- Prefer `const` assertions for literal types to reduce runtime overhead
-
----
-
-## 🔧 AVAILABLE TOOLS & COMMANDS
-
-### Development Commands
-```bash
-# Development server with hot reload
-npm run dev
-
-# Type checking (no emit)
-npm run type-check
-
-# Linting and formatting
-npm run lint
-npm run lint:fix
-npm run format
-
-# Testing
-npm run test
-npm run test:watch
-npm run test:coverage
-npm run test:e2e
-
-# Building
-npm run build
-npm run build:analyze
-```
-
-### Quality Assurance
-```bash
-# Pre-commit hooks
-npm run pre-commit  # Runs lint, type-check, and tests
-
-# Build validation
-npm run validate    # Full build and test suite
-
-# Security audit
-npm audit --audit-level high
+});
 ```
 
 ---
 
-## 🚨 VALIDATION GATES
+## ✅ QUALITY ASSURANCE FRAMEWORK
 
 ### Pre-Implementation Checklist
-- [ ] **Requirements Clear**: Business logic and acceptance criteria understood
-- [ ] **Types Defined**: All interfaces and types explicitly declared
-- [ ] **Architecture Aligned**: Solution follows established patterns
-- [ ] **Dependencies Minimal**: No unnecessary external dependencies
+- [ ] **Requirements Analysis**: Clear understanding of functional requirements
+- [ ] **Type Safety**: Proper TypeScript types defined
+- [ ] **Architecture**: Follows established patterns and principles
+- [ ] **Dependencies**: All required packages and versions identified
+- [ ] **Testing Strategy**: Test cases planned and structured
 
-### Implementation Standards
-- [ ] **Type Safety**: No `any` types, strict mode enabled
-- [ ] **Error Handling**: All error paths handled explicitly
-- [ ] **Testing**: Integration tests for features, unit tests for complex logic
-- [ ] **Performance**: No performance regressions, bundle size acceptable
+### Implementation Validation
+- [ ] **Code Style**: Follows Airbnb JavaScript/TypeScript style guide
+- [ ] **Type Safety**: No `any` types, proper generic usage
+- [ ] **Error Handling**: Comprehensive error scenarios covered
+- [ ] **Performance**: No obvious performance bottlenecks
+- [ ] **Security**: No security vulnerabilities introduced
 
 ### Post-Implementation Checklist
-- [ ] **Code Review**: Peer review completed with architectural validation
-- [ ] **Tests Passing**: All test suites green, coverage targets met
-- [ ] **Documentation**: README updated, API documentation current
-- [ ] **Build Success**: Production build completes without warnings
+- [ ] **Linting**: Code passes ESLint with no warnings
+- [ ] **Type Checking**: TypeScript compiler passes with no errors
+- [ ] **Testing**: All tests pass with adequate coverage (>80%)
+- [ ] **Documentation**: Code is properly documented
+- [ ] **Integration**: Works with existing codebase
+- [ ] **Performance**: Meets performance requirements
+
+### Quality Gates
+**Mandatory Requirements**:
+- TypeScript strict mode compliance
+- ESLint passing with project configuration
+- Jest tests with >80% coverage
+- No console.log statements in production code
+- Proper error handling and logging
+
+**Recommended Practices**:
+- JSDoc comments for public APIs
+- README updates for new features
+- Performance benchmarking for critical paths
+- Security review for data handling
 
 ---
 
-## 📊 SUCCESS METRICS
+## 📚 EXAMPLE PATTERNS
 
-### Code Quality Indicators
-- **Type Coverage**: > 95% of code covered by TypeScript types
-- **Test Coverage**: > 80% line coverage, 100% branch coverage for critical paths
-- **Build Performance**: < 30 seconds for development builds
-- **Bundle Size**: Within defined limits for production builds
-- **Zero Runtime Errors**: No uncaught exceptions in production
+### Task Type: API Endpoint Development
+**Input**: Create a REST API endpoint for user management
+**Process**: 
+1. Define TypeScript interfaces for request/response
+2. Implement route handler with proper validation
+3. Add error handling and logging
+4. Write comprehensive tests
+5. Document API specification
 
-### Development Velocity
-- **Feature Delivery**: Consistent sprint velocity with quality gates
-- **Defect Rate**: < 5% of features require post-release fixes
-- **Developer Experience**: Fast feedback loops, minimal context switching
-
----
-
-## 🎯 FRAMEWORK-SPECIFIC EXTENSIONS
-
-### React/Next.js Context
-```markdown
-## React Development Standards
-**Component Patterns**: Functional components with hooks
-**State Management**: React Query for server state, Zustand for client state
-**Styling**: Tailwind CSS with component variants
-**Routing**: Next.js App Router with type-safe routes
-**Forms**: React Hook Form with Zod validation
-**Testing**: Testing Library with user-centric queries
-```
-
-### Node.js/Express Context
-```markdown
-## Backend Development Standards
-**Framework**: Express.js with TypeScript decorators or Fastify
-**Validation**: Zod for runtime type validation
-**Database**: Prisma ORM with PostgreSQL
-**Authentication**: JWT with refresh token rotation
-**API Design**: OpenAPI specification with auto-generated types
-**Monitoring**: Structured logging with correlation IDs
-```
-
-### Vue/Nuxt Context
-```markdown
-## Vue Development Standards
-**Composition API**: `<script setup>` syntax with TypeScript
-**State Management**: Pinia with type-safe stores
-**UI Components**: Headless UI with custom styling
-**Forms**: VeeValidate with Yup/Zod schemas
-**Testing**: Vue Testing Utils with component testing focus
-```
-
----
-
-## 🚀 ADVANCED PATTERNS
-
-### 1. Dependency Injection
+**Output**:
 ```typescript
-// IoC Container setup
-interface Container {
-  get<T>(token: Token<T>): T;
-  register<T>(token: Token<T>, factory: () => T): void;
+// types/user.ts
+interface CreateUserRequest {
+  name: string;
+  email: string;
+  role?: 'user' | 'admin';
 }
 
-const TOKENS = {
-  UserRepository: Symbol('UserRepository'),
-  EmailService: Symbol('EmailService'),
-  UserService: Symbol('UserService')
-} as const;
+interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+}
 
-// Service registration
-container.register(TOKENS.UserRepository, () => new DatabaseUserRepository(db));
-container.register(TOKENS.EmailService, () => new SMTPEmailService(config));
-container.register(TOKENS.UserService, () => 
-  new UserService(
-    container.get(TOKENS.UserRepository),
-    container.get(TOKENS.EmailService)
-  )
+// routes/users.ts
+import { Router } from 'express';
+import { body, validationResult } from 'express-validator';
+
+const router = Router();
+
+router.post(
+  '/users',
+  [
+    body('name').isString().isLength({ min: 2 }),
+    body('email').isEmail(),
+    body('role').optional().isIn(['user', 'admin']),
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const userData: CreateUserRequest = req.body;
+      const user = await userService.createUser(userData);
+      
+      const response: UserResponse = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt.toISOString(),
+      };
+
+      res.status(201).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 ```
 
-### 2. Event-Driven Architecture
+**Validation**: API handles validation, errors, and returns proper HTTP status codes
+
+### Task Type: React Component Development
+**Input**: Create a reusable form component with TypeScript
+**Process**:
+1. Define prop interfaces with proper typing
+2. Implement component with hooks
+3. Add form validation and error handling
+4. Write unit tests with Testing Library
+5. Document component usage
+
+**Output**:
 ```typescript
-interface DomainEvent {
-  readonly type: string;
-  readonly aggregateId: string;
-  readonly occurredAt: Date;
+// components/UserForm.tsx
+interface UserFormProps {
+  initialData?: Partial<User>;
+  onSubmit: (data: UserFormData) => Promise<void>;
+  isLoading?: boolean;
 }
 
-class UserEmailUpdated implements DomainEvent {
-  readonly type = 'UserEmailUpdated';
+interface UserFormData {
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+}
+
+const UserForm: React.FC<UserFormProps> = ({
+  initialData,
+  onSubmit,
+  isLoading = false,
+}) => {
+  const [formData, setFormData] = useState<UserFormData>({
+    name: initialData?.name || '',
+    email: initialData?.email || '',
+    role: initialData?.role || 'user',
+  });
   
-  constructor(
-    readonly aggregateId: string,
-    readonly newEmail: string,
-    readonly occurredAt = new Date()
-  ) {}
-}
+  const [errors, setErrors] = useState<Partial<UserFormData>>({});
 
-// Event Bus
-interface EventBus {
-  publish(event: DomainEvent): Promise<void>;
-  subscribe<T extends DomainEvent>(
-    eventType: string, 
-    handler: (event: T) => Promise<void>
-  ): void;
-}
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const validationErrors = validateForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    try {
+      await onSubmit(formData);
+      setErrors({});
+    } catch (error) {
+      console.error('Form submission error:', error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} aria-label="User form">
+      <div>
+        <label htmlFor="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+          aria-invalid={!!errors.name}
+          aria-describedby={errors.name ? 'name-error' : undefined}
+        />
+        {errors.name && <span id="name-error" role="alert">{errors.name}</span>}
+      </div>
+      
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? 'Saving...' : 'Save User'}
+      </button>
+    </form>
+  );
+};
+
+// __tests__/UserForm.test.tsx
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+describe('UserForm', () => {
+  const mockOnSubmit = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('submits form with valid data', async () => {
+    render(<UserForm onSubmit={mockOnSubmit} />);
+    
+    await userEvent.type(screen.getByLabelText(/name/i), 'John Doe');
+    await userEvent.type(screen.getByLabelText(/email/i), 'john@example.com');
+    
+    fireEvent.click(screen.getByRole('button', { name: /save user/i }));
+    
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith({
+        name: 'John Doe',
+        email: 'john@example.com',
+        role: 'user',
+      });
+    });
+  });
+});
 ```
 
-### 3. Functional Programming Utilities
+### Common Patterns
+**Factory Pattern**: Use for creating complex objects with multiple configurations
+**Repository Pattern**: Abstract data access logic behind interfaces
+**Observer Pattern**: Implement event-driven architectures
+**Strategy Pattern**: Handle multiple algorithms or business rules
+
+**Anti-Patterns to Avoid**:
+- Using `any` type in TypeScript
+- Mutating function parameters
+- Deep nesting of callbacks
+- Global variables and state
+- Missing error handling
+- Testing implementation details instead of behavior
+
+---
+
+## 🔐 SECURITY CONSIDERATIONS
+
+### Data Validation and Sanitization
 ```typescript
-// Monadic error handling
-const pipe = <T>(...fns: Array<(arg: T) => T>) => (value: T): T =>
-  fns.reduce((acc, fn) => fn(acc), value);
+import validator from 'validator';
+import xss from 'xss';
 
-const compose = <T>(...fns: Array<(arg: T) => T>) => (value: T): T =>
-  fns.reduceRight((acc, fn) => fn(acc), value);
+const sanitizeUserInput = (input: string): string => {
+  return xss(validator.escape(input));
+};
 
-// Maybe monad for null handling
-class Maybe<T> {
-  private constructor(private value: T | null) {}
+const validateEmail = (email: string): boolean => {
+  return validator.isEmail(email) && email.length <= 254;
+};
+```
+
+### Environment Configuration
+```typescript
+// config/environment.ts
+const requiredEnvVars = [
+  'DATABASE_URL',
+  'JWT_SECRET',
+  'API_KEY',
+] as const;
+
+type RequiredEnvVar = typeof requiredEnvVars[number];
+
+const validateEnvironment = (): Record<RequiredEnvVar, string> => {
+  const missing = requiredEnvVars.filter(key => !process.env[key]);
   
-  static of<T>(value: T | null): Maybe<T> {
-    return new Maybe(value);
+  if (missing.length > 0) {
+    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
   }
   
-  map<U>(fn: (value: T) => U): Maybe<U> {
-    return this.value === null ? Maybe.of(null) : Maybe.of(fn(this.value));
-  }
-  
-  flatMap<U>(fn: (value: T) => Maybe<U>): Maybe<U> {
-    return this.value === null ? Maybe.of(null) : fn(this.value);
-  }
-}
+  return requiredEnvVars.reduce((acc, key) => {
+    acc[key] = process.env[key]!;
+    return acc;
+  }, {} as Record<RequiredEnvVar, string>);
+};
 ```
 
 ---
 
-*"Excellence in JavaScript/TypeScript development comes from disciplined application of proven patterns, comprehensive type safety, and relentless focus on maintainability."*
-
----
+*This instruction prompt provides comprehensive guidance for JavaScript/TypeScript development following industry best practices, modern conventions, and proven architectural patterns. Use this as a foundation for generating high-quality, maintainable code that meets professional development standards.*
 
 **Version**: 1.0  
-**Last Updated**: 2025-09-10  
-**Compatibility**: TypeScript 5.0+, Node.js 18+, Modern Browsers (ES2020+)  
-**Maintenance**: Review and update quarterly with ecosystem changes
-**References**: [JavaScript/TypeScript Best Practices Links](/research/javascript-typescript-convensions-links.md)
+**Last Updated**: 2025-09-11  
+**Compatibility**: TypeScript 4.9+, Node.js 18+, Modern JavaScript (ES2020+)  
+**Based on**: Airbnb JavaScript Style Guide, TypeScript Best Practices, Jest Testing Framework, DDD Principles
